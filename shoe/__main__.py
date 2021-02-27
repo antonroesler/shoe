@@ -1,14 +1,21 @@
 import sys
-from .helloworld import hi
+from .module import f
+
+
+def add(x):
+    print(f"{x} kilometers added to shoe.")
+
 
 def main():
-    print('in main')
     args = sys.argv[1:]
-    print('count of args :: {}'.format(len(args)))
-    for arg in args:
-        print('passed argument :: {}'.format(arg))
+    func = f[args[0]]
+    try:
+        func(args[1:])
+    except (IndexError, TypeError):
+        func()
 
-    hi()
+
+
 
 if __name__ == '__main__':
     main()

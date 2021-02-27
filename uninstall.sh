@@ -1,1 +1,1 @@
-pip3 uninstall shoe
+pip3 uninstall shoe -y
