@@ -1,5 +1,5 @@
 import sys
-from .module import f
+from .module import functions
 
 
 def add(x):
@@ -8,13 +8,18 @@ def add(x):
 
 def main():
     args = sys.argv[1:]
-    func = f[args[0]]
-    try:
-        func(args[1:])
-    except (IndexError, TypeError):
-        func()
+    f_name = args[0]
+    if f_name in functions:
+        call_function(f_name, args)
+    else:
+        call_function("info", [0, f_name])  # TODO: Find better solution
 
 
+def call_function(f_name, args):
+    if len(args) > 1:
+        functions[f_name](args[1:])
+    else:
+        functions[f_name]()
 
 
 if __name__ == '__main__':
