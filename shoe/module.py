@@ -6,9 +6,17 @@ DATA_PATH = os.path.join(FULL_PATH, "data")
 UNIT = "km"
 
 
+def create_data_dir():
+    os.mkdir(DATA_PATH)
+
+
 def save_shoe(name, mileage):
-    with open(os.path.join(DATA_PATH, name), "wb+") as file:
-        pickle.dump(mileage, file)
+    try:
+        with open(os.path.join(DATA_PATH, name), "wb+") as file:
+            pickle.dump(mileage, file)
+    except FileNotFoundError:
+        create_data_dir()
+        save_shoe(name, mileage)
 
 
 def load_shoe(name):
@@ -40,4 +48,4 @@ def info(args):
     x = load_shoe(name)
     print(f"{name} has {x} km.")
 
-f = {"add": add, "unit": unit, "create": create, "info": info}
+functions = {"add": add, "unit": unit, "create": create, "info": info}
