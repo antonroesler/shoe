@@ -1,22 +1,27 @@
 import pickle
 import os
+from os.path import expanduser
 
-FULL_PATH = os.getcwd()
-DATA_PATH = os.path.join(FULL_PATH, "data")
+from .Shoe import Shoe
+
+HOME = expanduser("~")
+DATA_PATH = os.path.join(HOME, "/Library/Caches/shoe/")
 UNIT = "km"
 
 
 def create_data_dir():
+    """Creates the data/ directory."""
     os.mkdir(DATA_PATH)
 
 
-def save_shoe(name, mileage):
+def save_shoe(name, shoe):
     try:
         with open(os.path.join(DATA_PATH, name), "wb+") as file:
-            pickle.dump(mileage, file)
+            pickle.dump(shoe, file)
     except FileNotFoundError:
+        # Only necessary for the first shoe after a fresh installation.
         create_data_dir()
-        save_shoe(name, mileage)
+        save_shoe(name, shoe)
 
 
 def load_shoe(name):
@@ -24,28 +29,29 @@ def load_shoe(name):
         return pickle.load(file)
 
 
-def unit():
-    global UNIT
-    if UNIT == "km":
-        UNIT = "miles"
-    else:
-        UNIT = "km"
-
-
 def add(args):
     name = args[0]
-    x = float(load_shoe(name))
-    x += float(args[1])
-    save_shoe(name, x)
+    shoe = load_shoe(name)
+    shoe.add_mileage(float(args[1]))
+    save_shoe(name, shoe)
 
 
 def create(args):
-    save_shoe(args[0], 0)
+    """To create a shoe args needs to be a list with the shoe's name at index 0."""
+    save_shoe(args[0], Shoe(args[0]))
 
 
 def info(args):
     name = args[0]
     x = load_shoe(name)
-    print(f"{name} has {x} km.")
+    x.print_info()
 
-functions = {"add": add, "unit": unit, "create": create, "info": info}
+
+def set_max_mileage(args):
+    name = args[0]
+    shoe = load_shoe(name)
+    shoe.set_max_mileage(args[1])
+    save_shoe(name, shoe)
+
+
+functions = {"add": add, "create": create, "info": info, "max": set_max_mileage}
