@@ -1,6 +1,7 @@
 import sys
 from .module import functions
 from .manual import man_page
+import click
 
 
 def main():
