@@ -10,7 +10,7 @@ UNIT = "km"
 
 
 def create_data_dir():
-    """Creates the data/ directory."""
+    """Creates the data/ directory in the user's file system."""
     os.mkdir(DATA_PATH)
 
 
@@ -25,15 +25,25 @@ def save_shoe(name, shoe):
 
 
 def load_shoe(name):
-    with open(os.path.join(DATA_PATH, name), "rb+") as file:
-        return pickle.load(file)
+    try:
+        with open(os.path.join(DATA_PATH, name), "rb+") as file:
+            return pickle.load(file)
+    except FileNotFoundError:
+        return None
 
 
 def add(args):
     name = args[0]
     shoe = load_shoe(name)
-    shoe.add_mileage(float(args[1]))
-    save_shoe(name, shoe)
+    if shoe:
+        shoe.add_mileage(float(args[1]))
+        save_shoe(name, shoe)
+    else:
+        dont_exist_msg(name)
+
+
+def dont_exist_msg(name):
+    print(f"{name} does not exist. [use 'create {name}' to create a new shoe]")
 
 
 def create(args):
@@ -42,16 +52,48 @@ def create(args):
 
 
 def info(args):
+    """Prints the shoe's infos."""
     name = args[0]
-    x = load_shoe(name)
-    x.print_info()
+    shoe = load_shoe(name)
+    if shoe:
+        shoe.print_info()
+    else:
+        dont_exist_msg(name)
 
 
 def set_max_mileage(args):
+    """Sets the shoe's maximum mileage to the parameter at args[1]"""
     name = args[0]
     shoe = load_shoe(name)
-    shoe.set_max_mileage(args[1])
-    save_shoe(name, shoe)
+    if shoe:
+        shoe.set_max_mileage(args[1])
+        save_shoe(name, shoe)
+    else:
+        dont_exist_msg(name)
 
 
-functions = {"add": add, "create": create, "info": info, "max": set_max_mileage}
+def list_all_shoes():
+    """Lists all shoes."""
+    for name in os.listdir(DATA_PATH):
+        print(name)
+
+
+def remove_shoe(args):
+    """Deletes a shoe."""
+    name = args[0]
+    try:
+        os.remove(os.path.join(DATA_PATH, name))
+        print(f"{name} deleted")
+    except FileNotFoundError:
+        print("0 shoes deleted")
+
+
+functions = {
+    "add": add,
+    "create": create,
+    "info": info,
+    "max": set_max_mileage,
+    "list": list_all_shoes,
+    "ls": list_all_shoes,
+    "rm": remove_shoe
+}

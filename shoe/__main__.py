@@ -1,18 +1,18 @@
 import sys
 from .module import functions
-
-
-def add(x):
-    print(f"{x} kilometers added to shoe.")
+from .manual import man_page
 
 
 def main():
     args = sys.argv[1:]
-    f_name = args[0]
-    if f_name in functions:
-        call_function(f_name, args)
+    if args:
+        f_name = args[0]
+        if f_name in functions:
+            call_function(f_name, args)
+        else:
+            call_function("info", [0, f_name])  # TODO: Find better solution
     else:
-        call_function("info", [0, f_name])  # TODO: Find better solution
+        man_page()
 
 
 def call_function(f_name, args):
