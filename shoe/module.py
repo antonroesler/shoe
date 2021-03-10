@@ -5,7 +5,7 @@ from os.path import expanduser
 from .Shoe import Shoe
 
 HOME = expanduser("~")
-DATA_PATH = os.path.join(HOME, "/Library/Caches/shoe/")
+DATA_PATH = os.path.join(HOME, "/Library/Application Support/Shoe")
 UNIT = "km"
 
 
