@@ -16,5 +16,5 @@ $ shoe create nike
 ```
 ## After a run
 ```bash
-$ shoe nike add 11.7
+$ shoe add nike 11.7
 ```
